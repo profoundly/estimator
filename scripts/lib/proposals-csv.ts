@@ -39,6 +39,29 @@ export function parseProposalCsv(csvText: string): Record<string, string>[] {
   }) as Record<string, string>[];
 }
 
+// Below this many existing rows the delete guard is skipped: on a tiny dev or
+// first-run table a large deletion fraction is meaningless (and expected).
+export const DELETE_GUARD_MIN_EXISTING = 10;
+
+// Fraction of existing rows above which a stale-delete is treated as suspicious
+// (a truncated or wrong file) rather than a normal refresh.
+export const DELETE_GUARD_MAX_FRACTION = 0.5;
+
+/**
+ * True when deleting `staleCount` of `existingCount` rows is large enough to
+ * look like a truncated/wrong import rather than a normal refresh, so the
+ * importer should refuse unless explicitly forced. The zero-row guard only
+ * catches a fully empty parse; this catches a partial file that would still
+ * prune most of the table.
+ */
+export function isLargeStaleDeletion(
+  existingCount: number,
+  staleCount: number
+): boolean {
+  if (existingCount < DELETE_GUARD_MIN_EXISTING) return false;
+  return staleCount / existingCount > DELETE_GUARD_MAX_FRACTION;
+}
+
 /**
  * Map raw rows to proposals, keeping only the estimator columns (dropping any
  * PII) and only rows with a usable id and title.

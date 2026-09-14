@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { parseProposalCsv, toProposals } from "../../scripts/lib/proposals-csv";
+import {
+  isLargeStaleDeletion,
+  parseProposalCsv,
+  toProposals,
+} from "../../scripts/lib/proposals-csv";
 
 const HEADER =
   "proposal_id,job_id,job_title,job_description,currency,proposed_price,proposal_status,created_at";
@@ -57,5 +61,27 @@ describe("toProposals", () => {
     const proposals = toProposals(rows);
     expect(proposals).toHaveLength(1);
     expect(proposals[0].proposal_id).toBe(9);
+  });
+});
+
+describe("isLargeStaleDeletion", () => {
+  it("flags pruning most of a real-sized table (the truncated-file case)", () => {
+    // 5 rows parsed out of ~2000 would delete ~1995: exactly what --force guards.
+    expect(isLargeStaleDeletion(2000, 1995)).toBe(true);
+  });
+
+  it("allows a normal refresh that churns a modest fraction", () => {
+    expect(isLargeStaleDeletion(2000, 300)).toBe(false);
+  });
+
+  it("does not trip at exactly half (only strictly greater)", () => {
+    expect(isLargeStaleDeletion(100, 50)).toBe(false);
+    expect(isLargeStaleDeletion(100, 51)).toBe(true);
+  });
+
+  it("skips the guard on a tiny or empty table, avoiding false positives", () => {
+    // Below the floor a big fraction is meaningless (dev tables, first run).
+    expect(isLargeStaleDeletion(5, 5)).toBe(false);
+    expect(isLargeStaleDeletion(0, 0)).toBe(false);
   });
 });

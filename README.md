@@ -117,6 +117,15 @@ It upserts before deleting so the table is never empty mid-run and the
 function reads the table live, so new estimates use the updated data as soon as
 the import finishes.
 
+Two safety guards protect against a bad file wiping the table: the import aborts
+if the CSV parses to zero valid rows, and it refuses to prune more than half of
+the existing rows (the sign of a truncated or wrong file), leaving the data
+untouched. If a large prune is genuinely intended, re-run with `--force`:
+
+```bash
+npm run import:proposals -- --force
+```
+
 To refresh production data you only run this import. You do not need to touch the
 frontend or the Edge Functions unless their code changed.
 
