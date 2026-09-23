@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "import:proposals": "tsx scripts/import-proposals.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -41,6 +42,7 @@
     "@vitejs/plugin-react": "^4.3.3",
     "autoprefixer": "^10.4.27",
     "csv-parse": "^7.0.2",
+    "dotenv": "^17.4.2",
     "eslint": "^9.13.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
