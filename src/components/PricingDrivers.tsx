@@ -40,37 +40,61 @@ const DRIVERS = [
   },
 ] as const;
 
-export function PricingDrivers() {
+interface PricingDriversProps {
+  // Sidebar placement (to keep it above the fold alongside the chart) needs
+  // a much shorter card than the full below-the-fold version — icon+title
+  // only, no descriptions, tighter spacing.
+  compact?: boolean;
+  // Gate preview only: renders each driver's title as a grey bar instead
+  // of legible copy, so nothing real reads as actual page content before
+  // the email is submitted. Never set true on the real results page.
+  redacted?: boolean;
+}
+
+export function PricingDrivers({ compact = false, redacted = false }: PricingDriversProps) {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className={compact ? "pb-4" : undefined}>
         <div className="flex items-center gap-2">
           <Info className="w-5 h-5 text-muted-foreground" />
           <div>
-            <CardTitle className="text-lg">
-              What drives pricing in projects like this
+            <CardTitle className={compact ? "text-base" : "text-lg"}>
+              What drives pricing
             </CardTitle>
-            <CardDescription>
-              Ranges are wide because every project's mix of these factors
-              is different.
-            </CardDescription>
+            {!compact && (
+              <CardDescription>
+                Ranges are wide because every project's mix of these factors
+                is different.
+              </CardDescription>
+            )}
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <ul className="space-y-4">
+        <ul className={compact ? "space-y-2.5" : "space-y-4"}>
           {DRIVERS.map(({ icon: Icon, title, description }) => (
-            <li key={title} className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-secondary/60 flex items-center justify-center">
-                <Icon className="w-4 h-4 text-muted-foreground" />
+            <li key={title} className="flex items-center gap-3">
+              <div
+                className={`flex-shrink-0 rounded-lg bg-secondary/60 flex items-center justify-center ${
+                  compact ? "w-7 h-7" : "w-9 h-9"
+                }`}
+              >
+                <Icon className={compact ? "w-3.5 h-3.5 text-muted-foreground" : "w-4 h-4 text-muted-foreground"} />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-foreground">
-                  {title}
-                </p>
-                <p className="text-sm text-muted-foreground leading-relaxed mt-0.5">
-                  {description}
-                </p>
+              <div className={`flex-1 min-w-0 ${redacted ? "flex items-center" : ""}`}>
+                {redacted ? (
+                  <span
+                    className="block h-4 w-4/5 rounded bg-gray-300"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <p className="text-sm font-semibold text-foreground">{title}</p>
+                )}
+                {!compact && (
+                  <p className="text-sm text-muted-foreground leading-relaxed mt-0.5">
+                    {description}
+                  </p>
+                )}
               </div>
             </li>
           ))}

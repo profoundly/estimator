@@ -75,9 +75,9 @@ export function EmailCaptureModal({ open, onSubmit }: EmailCaptureModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40" />
       <div className="relative w-full max-w-md rounded-xl border border-gray-200 bg-white p-6 shadow-lg">
-        <h2 className="text-lg font-semibold">Before we get started</h2>
+        <h2 className="text-lg font-semibold">Unlock real pricing data for HubSpot help</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          This helps us personalize your estimate and connect you with the right HubSpot experts.
+          Data from 3,000+ proposals, broken down by category.
         </p>
         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
           <div className="grid grid-cols-2 gap-4">
@@ -110,7 +110,6 @@ export function EmailCaptureModal({ open, onSubmit }: EmailCaptureModalProps) {
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email address</Label>
-            <p className="text-xs text-gray-500">Please use a work email for the most accurate project brief, pricing, and expert matches.</p>
             <input
               id="email"
               type="email"
@@ -134,7 +133,7 @@ export function EmailCaptureModal({ open, onSubmit }: EmailCaptureModalProps) {
             )}
           </div>
           <Button type="submit" className="w-full">
-            Get Started
+            Unlock Pricing Data ✨
           </Button>
         </form>
       </div>

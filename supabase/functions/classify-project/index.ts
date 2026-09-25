@@ -13,47 +13,55 @@ interface ClassificationResult {
   confidence: number;
 }
 
+// Derived from the real proposal corpus, not guessed up front — see
+// scripts/categorize-proposals.ts for the analysis and throughline-os#2.
+// Keep in sync with that script.
 const CATEGORY_KEYWORDS: Record<string, string[]> = {
-  "CRM Setup": [
-    "crm setup", "crm config", "hubspot setup", "portal setup",
-    "crm implementation", "pipeline setup", "property setup",
+  "Reporting & Dashboards": [
+    "dashboard", "reporting", "report", "analytics", "metrics",
+    "attribution report",
   ],
-  "Marketing Hub": [
-    "marketing hub", "email marketing", "lead nurture", "landing page",
-    "marketing automation", "email campaign", "lead generation",
-    "content strategy", "seo", "social media",
+  "Marketing & Campaigns": [
+    "marketing hub", "email campaign", "landing page", "lead nurture",
+    "marketing automation", "attribution", "ads", "seo",
+    "content strategy", "lead generation", "email marketing",
   ],
-  "Sales Hub": [
-    "sales hub", "sales pipeline", "sales process", "sequences",
-    "playbook", "deal pipeline", "sales enablement", "forecasting",
+  "Integrations": [
+    "integration", "salesforce", "api", "connector", "sync", "zapier",
+    "shopify", "quickbooks", "netsuite", "third-party",
   ],
-  "Service Hub": [
-    "service hub", "ticketing", "knowledge base", "customer portal",
-    "help desk", "support ticket", "customer service",
+  "Workflow Automation": [
+    "workflow", "automation", "automate", "sequence automation",
+    "operations hub",
   ],
-  "CMS / Website": [
-    "cms hub", "website", "web design", "web development",
-    "theme", "template", "blog", "content management",
+  "Portal Setup & Implementation": [
+    "setup", "implementation", "configure", "get started", "onboard",
+    "reset", "new account", "initial",
   ],
-  "Integration": [
-    "integration", "salesforce", "api", "zapier", "middleware",
-    "sync", "connector", "webhook", "data flow",
+  "CRM & Sales Process": [
+    "sales pipeline", "sales process", "deal stage", "deal pipeline",
+    "sales hub", "forecast", "sequences", "playbook", "crm clean",
+    "pipeline setup", "quote template",
   ],
-  "Migration": [
-    "migration", "data import", "data transfer", "switch from",
-    "transition", "convert", "move from",
+  "Audit & Strategy": [
+    "audit", "overview", "technical review", "strategy", "assessment",
+    "consult",
   ],
-  "RevOps": [
-    "revops", "revenue operations", "strategy", "consulting",
-    "process optimization", "reporting", "analytics",
+  "Website & CMS": [
+    "website", "cms", "landing page design", "web design", "web page",
+    "blog",
   ],
-  "Training": [
-    "training", "onboarding", "adoption", "coaching",
-    "user training", "documentation", "enablement",
+  "Data Migration & Cleanup": [
+    "migration", "migrate", "data clean", "deduplicate", "dedupe",
+    "data hygiene", "data integrity", "import", "sanitized list",
+    "clean up",
   ],
-  "Audit": [
-    "audit", "review", "optimization", "health check",
-    "portal review", "assessment", "cleanup",
+  "RevOps & Architecture": [
+    "revops", "architecture", "portal structure", "operations",
+    "data model", "property structure",
+  ],
+  "Training & Enablement": [
+    "training", "onboarding", "coach", "enablement", "educate",
   ],
 };
 
