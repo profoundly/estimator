@@ -42,19 +42,32 @@ Deno.serve(async (req) => {
   // across 11 categories (too sparse for some), and PENDING/NOT_ACCEPTED
   // prices are still real quotes for real scoped work, just not the ones
   // that happened to close.
-  const { data, error } = await supabase
-    .from("proposals")
-    .select("category, proposed_price, job_title")
-    .not("category", "is", null);
+  //
+  // Paged because hosted PostgREST caps every response at max_rows (1,000
+  // by default) and the table is ~3,200 rows — a single select silently
+  // returns only the first page. Same loop as scripts/export-real-fixture.ts.
+  const pageSize = 1000;
+  const data: { category: string; proposed_price: number; job_title: string | null }[] = [];
+  for (let from = 0; ; from += pageSize) {
+    const { data: page, error } = await supabase
+      .from("proposals")
+      .select("category, proposed_price, job_title")
+      .not("category", "is", null)
+      .order("id")
+      .range(from, from + pageSize - 1);
 
-  if (error) {
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
-    );
+    if (error) {
+      return new Response(
+        JSON.stringify({ error: error.message }),
+        { status: 500, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+      );
+    }
+
+    data.push(...(page ?? []));
+    if (!page || page.length < pageSize) break;
   }
 
-  const proposals = filterPlausiblePrices(data ?? []).map((row) => ({
+  const proposals = filterPlausiblePrices(data).map((row) => ({
     category: row.category,
     proposed_price: row.proposed_price,
     job_title: scrubTitle(row.job_title ?? ""),
