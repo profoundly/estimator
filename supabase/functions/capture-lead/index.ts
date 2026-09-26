@@ -83,12 +83,10 @@ Deno.serve(async (req) => {
     const safeLastName =
       typeof lastName === "string" && lastName.trim() ? lastName.trim().slice(0, 200) : null;
 
-    // NOTE: submissions has columns (description, estimate_low, etc.) left
-    // over from the old text-description flow — not verified here whether
-    // any of those are NOT NULL without a default, since no migration file
-    // for this table exists in the repo (see migration 20250807's own
-    // comment). If this insert fails on a missing-column constraint, that's
-    // the first thing to check.
+    // description is left null: this flow has none, and
+    // 20260926_make_submission_description_optional.sql drops the NOT NULL
+    // that production had on it. That migration must be applied before this
+    // function is deployed, or every insert fails.
     const { error: insertError } = await supabase.from("submissions").insert({
       email,
       first_name: safeFirstName,
