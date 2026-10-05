@@ -115,18 +115,8 @@ export function PriceScatter({ proposals, selectedCategory }: PriceScatterProps)
               (dataMax: number) => Math.ceil(dataMax * 1.2),
             ]}
             allowDataOverflow
-            tickFormatter={(v: number) =>
-              v >= 1000 ? `$${Math.round(v / 1000)}k` : `$${v}`
-            }
-            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+            tick={false}
             axisLine={{ stroke: "hsl(var(--border))" }}
-            label={{
-              value: "price (log scale)",
-              position: "insideBottom",
-              offset: -5,
-              fontSize: 12,
-              fill: "hsl(var(--muted-foreground))",
-            }}
           />
           <YAxis
             type="number"
@@ -134,13 +124,6 @@ export function PriceScatter({ proposals, selectedCategory }: PriceScatterProps)
             domain={[0, 100]}
             tick={false}
             axisLine={{ stroke: "hsl(var(--border))" }}
-            label={{
-              value: "each dot is one real HubSpot project",
-              angle: -90,
-              position: "insideLeft",
-              fontSize: 12,
-              fill: "hsl(var(--muted-foreground))",
-            }}
           />
           <Tooltip
             cursor={{ strokeDasharray: "3 3" }}
